@@ -1,0 +1,24 @@
+html { 
+    background: url(/media/bg.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+body {
+    background: transparent;
+}
+
+header div.collapse {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px !important;
+}
+
+#mainMenu a:hover{
+    color: red;
+}
+
+#mainMenu a.active{
+    color: red;
+    text-decoration: underline;
+}

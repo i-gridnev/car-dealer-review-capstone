@@ -1,0 +1,41 @@
+<header>
+    <div class="container">
+        <div class="my-2">
+            <a class="navbar-brand" href="{% url 'djangoapp:index' %}">
+                <img src="{{MEDIA_URL}}logo.jpg" alt="" width="280" height="95">
+            </a>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-md bg-warning">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainMenu">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item me-3">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index' %} active{% endif %}" aria-current="page" href="{% url 'djangoapp:index' %}">DEALERS</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" href="#">REVIEWS</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %} active{% endif %}" href="{% url 'djangoapp:about' %}">ABOUT US</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %} active{% endif %}" href="{% url 'djangoapp:contact' %}">CONTACT US</a>
+                    </li>
+                </ul>
+            </div>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item bg-primary p-1 rounded-3 me-2">
+                        <a class="nav-link text-white" href="#">Login</a>
+                    </li>
+                    <li class="nav-item bg-secondary p-1 rounded-3">
+                        <a class="nav-link text-white" href="#">Sign up</a>
+                    </li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+</header>
