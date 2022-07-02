@@ -1,11 +1,11 @@
   applications:
   - name: djangoapp
     routes:
-      - route: best-car-review.eu-de.mybluemix.net
+      - route: ((ROUTE))
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: best-car-review.eu-de.mybluemix.net/static
+      - route: ((ROUTE))/static
     memory: 64M
     buildpack: staticfile_buildpack

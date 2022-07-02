@@ -4,12 +4,13 @@ on: workflow_dispatch
 
 # Environment variables available to all jobs and steps in this workflow
 env:
-  IBM_CLOUD_REGION: us-south
-  IBM_CLOUD_GROUP: default
-  IBM_CLOUD_SPACE: dev
-  IBM_CLOUD_ORG:
+  IBM_CLOUD_REGION: eu-de
+  IBM_CLOUD_GROUP: Default
+  IBM_CLOUD_SPACE: django-f
+  IBM_CLOUD_ORG: sample-org-for-coursera
   MANIFEST_NAME: manifest.yml
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
+  ROUTE: ${{secrets.ROUTE}}
 
 defaults:
   run:
@@ -42,5 +43,5 @@ jobs:
         run: ibmcloud cf apps
         shell: bash
       - name: Deploy manifest file
-        run: ibmcloud cf push -f ./$MANIFEST_NAME
+        run: ibmcloud cf push -f ./$MANIFEST_NAME --vars ROUTE=$ROUTE
         shell: bash
