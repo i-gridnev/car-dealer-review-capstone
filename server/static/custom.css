@@ -1,5 +1,5 @@
 html { 
-    background: url(/static/media/bg.jpg) no-repeat center center fixed; 
+    background: url(/media/bg.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -20,5 +20,4 @@ header div.collapse {
 
 #mainMenu a.active{
     color: red;
-    text-decoration: underline;
 }
