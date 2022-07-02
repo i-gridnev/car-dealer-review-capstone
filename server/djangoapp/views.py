@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
@@ -10,36 +11,68 @@ from datetime import datetime
 import logging
 import json
 
-# Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
-
-
-# Create an `about` view to render a static about page
 def about(request):
     return render(request, 'djangoapp/about.html')
 
 
-
-# Create a `contact` view to return a static contact page
 def contact(request):
     return render(request, 'djangoapp/contact.html')
 
-# Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def login_request(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['psw']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('djangoapp:index')
+        else:
+            context = {
+                'error': f'Login failed, please check your credentials.'
+            }
+            return render(request, 'djangoapp/error.html', context)
 
-# Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
+
+def logout_request(request):
+    logout(request)
+    return redirect('djangoapp:index')
+
+
+def register(request):
+    if request.user.is_authenticated:
+        context = {
+            'error': f'You are already logged in as "{request.user.username}"! Please log out to create a new account.'
+        }
+        return render(request, 'djangoapp/error.html', context)
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['psw']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        try:
+            User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                first_name=first_name,
+                last_name=last_name)
+            login(request, user)
+            return redirect('djangoapp:index')
+        context = {
+            'error': f'User with name "{username}" is already registered, please try another name'
+        }
+        return render(request, 'djangoapp/registration.html', context)
+    else:
+        return render(request, 'djangoapp/registration.html')
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
+
+
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
@@ -53,4 +86,3 @@ def get_dealerships(request):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-
