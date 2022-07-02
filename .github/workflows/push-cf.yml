@@ -43,5 +43,5 @@ jobs:
         run: ibmcloud cf apps
         shell: bash
       - name: Deploy manifest file
-        run: ibmcloud cf push -f ./$MANIFEST_NAME --vars ROUTE=$ROUTE
+        run: ibmcloud cf push -f ./$MANIFEST_NAME --var ROUTE=$ROUTE
         shell: bash
