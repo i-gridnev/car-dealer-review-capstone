@@ -4,6 +4,9 @@
       - route: ((ROUTE))
     memory: 128M
     buildpack: python_buildpack
+    env:
+      DEBUG_MODE: ((DEBUG_MODE))
+      APP_ROUTE: ((ROUTE))
   - name: djangoapp-nginx
     routes:
       - route: ((ROUTE))/static
