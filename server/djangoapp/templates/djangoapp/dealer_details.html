@@ -1,18 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dealership Review</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-
-    <body>
-
-    <!--Add a nav bar here -->
-
-    <!-- Add reviews as cards -->
-
-    </body>
-
-</html>
+{% extends 'base.html' %}
+{% block page_title %}Reviews{% endblock %}
+{% block content %}
+<div class="row p-3">
+    <div class="col">
+        <h2>{{ dealer.full_name }}</h2>
+        <p>We are at {{ dealer.address }} (lat: {{ dealer.lat }}, long: {{ dealer.long }} ). Hello from {{ dealer.state }} state!</p>
+    </div>
+</div>
+<div class="row">
+    {% for r in reviews %}
+    <div class="col">
+        <div class="card-group">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ r.name }} purshased {{ r.car_make }} - {{ r.car_model }} ({{ r.car_year }})</h5>
+                    <p class="card-text">{{ r.review }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

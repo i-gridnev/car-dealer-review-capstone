@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ao5z(o(z@cvzodm99d32jkxa5e8a1!q_4sqss5-a%n6tg$#h$+'
+SECRET_KEY = os.getenv('SECRET_KEY', 'somekey4147104sdfs;fjsd984411---unsecure!!!!!!!!!!!')
+
+API_CLOUDANT_DB = os.getenv('API_CLOUDANT_DB', '')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG_MODE', 'False') == 'True')
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", os.getenv('APP_ROUTE')]
+ALLOWED_HOSTS = ["localhost", os.getenv('APP_ROUTE')]
 
 
 # Application definition
@@ -125,3 +131,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
 MEDIA_URL = '/media/'
+
+# apikey = "cILux09QpIVVrgSBLaZsYtY8xPY6owdGfjwLwxRPbDst"
+# url = "https://754b3a93-7d1b-473b-b39f-bdf7c7fcda32-bluemix.cloudantnosqldb.appdomain.cloud"

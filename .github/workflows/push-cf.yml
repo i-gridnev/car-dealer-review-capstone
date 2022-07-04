@@ -11,7 +11,8 @@ env:
   MANIFEST_NAME: manifest.yml
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
   ROUTE: ${{secrets.ROUTE}}
-
+  API_CLOUDANT_DB: ${{secrets.API_CLOUDANT_DB}}
+  SECRET_KEY: ${{secrets.SECRET_KEY}}
 defaults:
   run:
     working-directory: server
@@ -43,5 +44,5 @@ jobs:
         run: ibmcloud cf apps
         shell: bash
       - name: Deploy manifest file
-        run: ibmcloud cf push -f ./$MANIFEST_NAME --var ROUTE=$ROUTE --var DEBUG_MODE="False"
+        run: ibmcloud cf push -f ./$MANIFEST_NAME --var ROUTE=$ROUTE --var DEBUG_MODE="False" --var API_CLOUDANT_DB=$API_CLOUDANT_DB --var SECRET_KEY=$SECRET_KEY
         shell: bash

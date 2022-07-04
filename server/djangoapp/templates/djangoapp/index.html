@@ -4,7 +4,45 @@
 <div class="row p-3">
     <div class="col">
         <h2>We provide dealers all over USA</h2>
-        <p>This is the index page of your Django app!</p>
+        <p>You can filter dealers by state. Fell free to get detalied info by clicking on a daeler!</p>
     </div>
 </div>
+<div class="row justify-content-center">
+    <div class="col-lg-11 bg-light border rounded-2 shadow-lg p-3">
+    <table class="table table-striped table-hover" id="table" data-filter-control="true">
+        <thead>
+            <tr>
+                <th class="align-top" data-field="id">ID</th>
+                <th class="align-top" data-field="dealer_name">Dealer Name</th>
+                <th class="align-top" data-field="city">City</th>
+                <th class="align-top" data-field="address">Address</th>
+                <th class="align-top" data-field="zip">Zip</th>
+                <th class="align-top" data-field="state" data-filter-control="select">Filter by State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dealer in dealerships %}
+                <tr>
+                    <td>{{dealer.id}}</td>
+                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                    <td>{{dealer.city}}</td>
+                    <td>{{dealer.address}}</td>
+                    <td>{{dealer.zip}}</td>
+                    <td>{{dealer.st}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<script>
+    $(function() {
+        $('#table').bootstrapTable()
+      })
+</script>
 {% endblock %}
