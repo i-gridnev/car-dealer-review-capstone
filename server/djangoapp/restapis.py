@@ -13,9 +13,10 @@ def get_request(url, **kwargs):
         # Call get method of requests library with URL and parameters
         response = requests.get( settings.API_CLOUDANT_DB + url, headers={'Content-Type': 'application/json'},
                                 params=kwargs)
+        json_data = json.loads(response.text)
     except:
         print("Network exception occurred")
-    json_data = json.loads(response.text)
+    
     return json_data
 
 # Create a `post_request` to make HTTP POST requests
