@@ -12,7 +12,7 @@ env:
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
   ROUTE: ${{secrets.ROUTE}}
   API_CLOUDANT_DB: ${{secrets.API_CLOUDANT_DB}}
-  SECRET_KEY: ${{env.SECRET_KEY}}
+  SECRET_KEY: ${{secrets.SECRET_KEY}}
 defaults:
   run:
     working-directory: server
