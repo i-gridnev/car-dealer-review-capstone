@@ -45,5 +45,5 @@ jobs:
         run: ibmcloud cf apps
         shell: bash
       - name: Deploy manifest file
-        run: ibmcloud cf push -f ./$MANIFEST_NAME --var ROUTE=$ROUTE --var DEBUG_MODE="False" --var API_CLOUDANT_DB=$API_CLOUDANT_DB --var SECRET_KEY=$SECRET_KEY
+        run: ibmcloud cf push -f ./$MANIFEST_NAME --var ROUTE=$ROUTE --var DEBUG_MODE=$DEBUG_MODE --var API_CLOUDANT_DB=$API_CLOUDANT_DB --var SECRET_KEY=$SECRET_KEY
         shell: bash
