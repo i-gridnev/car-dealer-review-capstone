@@ -13,6 +13,7 @@ env:
   ROUTE: ${{secrets.ROUTE}}
   API_CLOUDANT_DB: ${{secrets.API_CLOUDANT_DB}}
   SECRET_KEY: ${{secrets.SECRET_KEY}}
+  DEBUG_MODE: ${{secrets.DEBUG_MODE}}
 defaults:
   run:
     working-directory: server

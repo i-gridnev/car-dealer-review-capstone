@@ -131,6 +131,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
 MEDIA_URL = '/media/'
-
-# apikey = "cILux09QpIVVrgSBLaZsYtY8xPY6owdGfjwLwxRPbDst"
-# url = "https://754b3a93-7d1b-473b-b39f-bdf7c7fcda32-bluemix.cloudantnosqldb.appdomain.cloud"
