@@ -1,5 +1,5 @@
 requests
-Django
-gunicorn
+Django==4.0.5
+gunicorn==20.0.4
 Pillow
-python-dotenv
+python-dotenv==0.20.0
