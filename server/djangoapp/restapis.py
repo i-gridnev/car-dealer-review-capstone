@@ -15,8 +15,6 @@ def get_request(url, **kwargs):
                                 params=kwargs)
     except:
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
