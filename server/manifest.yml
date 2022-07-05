@@ -11,4 +11,4 @@
     routes:
       - route: ((ROUTE))/static
     memory: 64M
-    buildpack: nginx_buildpack
+    buildpack: static_buildpack
