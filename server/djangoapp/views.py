@@ -21,6 +21,7 @@ def contact(request):
 
 
 def login_request(request):
+    context = {}
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['psw']
@@ -41,10 +42,9 @@ def logout_request(request):
 
 
 def register(request):
+    context = {}
     if request.user.is_authenticated:
-        context = {
-            'error': f'You are already logged in as "{request.user.username}"! Please log out to create a new account.'
-        }
+        context['error'] = f'You are already logged in as "{request.user.username}"! Please log out to create a new account.'
         return render(request, 'djangoapp/error.html', context)
     if request.method == "POST":
         username = request.POST['username']
@@ -61,9 +61,7 @@ def register(request):
                 last_name=last_name)
             login(request, user)
             return redirect('djangoapp:index')
-        context = {
-            'error': f'User with name "{username}" is already registered, please try another name'
-        }
+        context['error'] = f'User with name "{username}" is already registered, please try another name'
         return render(request, 'djangoapp/registration.html', context)
     else:
         context['error'] = f"Error, bad request"
