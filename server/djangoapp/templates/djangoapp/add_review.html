@@ -7,7 +7,8 @@
 <div class="row p-3 justify-content-center">
     <div class="col-8">
         <h1>Add a review about "{{ dealer.full_name }}"</h1>
-        <form class="row" action="">
+        <form class="row border-secondary p-3" method="post" action="{% url 'djangoapp:add_review' dealer.id %}">
+            {% csrf_token %}
             <div class="row mb-3">
                 <label class="col-form-label" for="review">Your review:</label>
                 <div class="col">
@@ -23,22 +24,26 @@
                 </div>
             </div>
             <div class="collapse" id="purchase_details">
-            <div class="row mb-3">
-                <label class="col-form-label" for="car">Select your car:</label>
-                <div class="col-md-6">
-                <select name="car" id="car" class="form-select" required>
-                    {% for car in cars %}
-                        <option selected value={{car.id}}>{{ car.name }} {{ car.make.name }} {{ car.Year | date:'Y'}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="row mb-3">            
-                <label class="col-form-label" for="purshaseDate">Select your purshase date</label>
-                <div class="col-md-6">
-                <input id="purshaseDate" class="form-control" type="date" />
+                <div class="row mb-3">
+                    <label class="col-form-label" for="car">Select your car:</label>
+                    <div class="col-md-6">
+                        <select name="car" id="car" class="form-select" required>
+                            {% for car in cars %}
+                                <option selected value={{car.id}}>{{ car.name }} {{ car.make.name }} {{ car.Year | date:'Y'}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
+                <div class="row mb-3">            
+                    <label class="col-form-label" for="purshaseDate">Select your purshase date</label>
+                    <div class="col-md-6">
+                        <input id="purshaseDate" name="purshase_date" class="form-control" type="date" />
+                    </div>
+                </div>                
             </div>
-        </div>
+            <div class="col"> 
+                <button class="btn btn-primary" type="submit">SEND REVIEW</button>
+            </div>
         </form>
     </div>
 </div>

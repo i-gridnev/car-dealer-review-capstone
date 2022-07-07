@@ -14,6 +14,7 @@ env:
   API_CLOUDANT_DB: ${{secrets.API_CLOUDANT_DB}}
   SECRET_KEY: ${{secrets.SECRET_KEY}}
   DEBUG_MODE: ${{secrets.DEBUG_MODE}}
+  WATSON_API_KEY: ${{secrets.WATSON_API_KEY}}
 defaults:
   run:
     working-directory: server

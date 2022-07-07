@@ -26,6 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'somekey4147104sdfs;fjsd984411---unsecure!!!!!!!!!!!')
 
 API_CLOUDANT_DB = os.getenv('API_CLOUDANT_DB', '')
+WATSON_API_KEY = os.getenv('WATSON_API_KEY', '')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!

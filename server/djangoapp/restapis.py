@@ -2,18 +2,24 @@ import requests
 import json
 from .models import CarDealer, DealerReview
 from django.conf import settings
-from requests.auth import HTTPBasicAuth
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
 
 
-# Create a `get_request` to make HTTP GET requests
-# e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-#                                     auth=HTTPBasicAuth('apikey', api_key))
-def get_request(url, **kwargs):
+def send_request(url, method='GET', json_data='', **kwargs):
     try:
-        # Call get method of requests library with URL and parameters
-        response = requests.get(settings.API_CLOUDANT_DB + url, headers={'Content-Type': 'application/json'},
-                                params=kwargs)
+        response = requests.request(
+            method=method, url=settings.API_CLOUDANT_DB + url, 
+            headers={'Content-Type': 'application/json'},
+            json=json_data,
+            params=kwargs)
         json_data = json.loads(response.text)
+        if method == 'POST' and not response['ok']:
+            return {
+                'statusCode': 500,
+                'message': 'review was not send, try again later'
+            }
         return json_data
     except:
         print("Network exception occurred")
@@ -22,20 +28,17 @@ def get_request(url, **kwargs):
             'message': 'internal error'
         }
 
-
-# Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
 def get_dealer_by_id_from_cf(dealerId):
     url = '/dealership'
-    response = get_request(url, dealerId=dealerId)
+    response = send_request(url, dealerId=dealerId)
     if response['statusCode'] == 200:
         response['dealer'] = CarDealer(**response['dealers'][0])
     return response
 
-# Create a get_dealers_from_cf method to get dealers from a cloud function
+
 def get_dealers_from_cf():
     url = '/dealership'
-    response = get_request(url)
+    response = send_request(url)
     if response['statusCode'] == 200:
         response['dealers'] = map(
             lambda raw: CarDealer(**raw), response['dealers'])
@@ -44,7 +47,7 @@ def get_dealers_from_cf():
 
 def get_reviews_by_dealer_id_from_cf(dealerId):
     url = '/review'
-    response = get_request(url, dealerId=dealerId)
+    response = send_request(url, dealerId=dealerId)
     if response['statusCode'] == 200:
         response['dealer'] = CarDealer(**response['dealer'])
         response['reviews'] = map(
@@ -53,7 +56,25 @@ def get_reviews_by_dealer_id_from_cf(dealerId):
     return response
 
 
-# Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(text):
+    authenticator = IAMAuthenticator(settings.WATSON_API_KEY)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(
+        version='2022-04-07',
+        authenticator=authenticator
+    )
+    natural_language_understanding.set_service_url(
+        'https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com')
+
+    response = natural_language_understanding.analyze(
+        text=text,
+        features=Features(sentiment=SentimentOptions()),
+        language='en').get_result()
+    # print(json.dumps(response, indent=2))
+    return response['sentiment']['document']['label']
+
+
+
+def post_review(review):
+    url = '/review'
+    response = send_request(url=url, method='POST', json_data=review)
+    return response

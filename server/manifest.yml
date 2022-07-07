@@ -9,6 +9,7 @@
       APP_ROUTE: ((ROUTE))
       SECRET_KEY: ((SECRET_KEY))
       API_CLOUDANT_DB: ((API_CLOUDANT_DB))
+      WATSON_API_KEY: ((WATSON_API_KEY))
   - name: djangoapp-nginx
     routes:
       - route: ((ROUTE))/static

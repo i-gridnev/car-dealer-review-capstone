@@ -1,15 +1,13 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import CarModel, CarMake
-from .restapis import get_dealers_from_cf, get_reviews_by_dealer_id_from_cf, get_dealer_by_id_from_cf
+from django.shortcuts import render, redirect
+from .models import CarModel
+from .restapis import get_dealers_from_cf, get_reviews_by_dealer_id_from_cf, get_dealer_by_id_from_cf, post_review, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +66,8 @@ def register(request):
         }
         return render(request, 'djangoapp/registration.html', context)
     else:
-        return render(request, 'djangoapp/registration.html')
+        context['error'] = f"Error, bad request"
+        return render(request, 'djangoapp/error.html', context)
 
 
 def get_dealerships(request):
@@ -81,7 +80,6 @@ def get_dealerships(request):
         else:
             context['error'] = f"{response['statusCode']} Error, {response['message']}"
             return render(request, 'djangoapp/error.html', context)
-        
 
 
 def get_dealer_details(request, dealer_id):
@@ -102,13 +100,45 @@ def add_review(request, dealer_id):
     if not request.user.is_authenticated:
         context['error'] = f"{403} Error, you are not allowed to post a review. Please login!"
         return render(request, 'djangoapp/error.html', context)
-    
+
     if request.method == "GET":
         response = get_dealer_by_id_from_cf(dealer_id)
         if response['statusCode'] == 200:
             context['dealer'] = response['dealer']
-            context['cars'] = CarModel.objects.filter(delear_id = dealer_id).all()
+            context['cars'] = CarModel.objects.filter(
+                delear_id=dealer_id).all()
             return render(request, 'djangoapp/add_review.html', context)
+        else:
+            context['error'] = f"{response['statusCode']} Error, {response['message']}"
+            return render(request, 'djangoapp/error.html', context)
+
+    if request.method == "POST":
+        text = request.POST['review']
+        has_purchased = bool(request.POST['purchasecheck'])
+        purchase_date = request.POST['purshase_date']
+        car_id = request.POST['car']
+
+        review = {
+            'name': f'{request.user.first_name} {request.user.last_name}',
+            'dealership': dealer_id,
+            'review': text,
+            'purchase_date': purchase_date,
+            'sentiment': analyze_review_sentiments(text)
+        }
+
+        if has_purchased and car_id and purchase_date:
+            car = CarModel.objects.get(car_id)
+            review['purchase'] = has_purchased
+            review['purchase_date'] = purchase_date
+            review['car_model'] = car.name
+            review['car_make'] = car.make.name
+            review['car_year']: car.Year
+        else:
+            review['purchase'] = False
+
+        response = post_review(review)
+        if response['statusCode'] == 200:
+            return redirect('djangoapp:dealer_details', dealer_id)
         else:
             context['error'] = f"{response['statusCode']} Error, {response['message']}"
             return render(request, 'djangoapp/error.html', context)
