@@ -2,15 +2,14 @@
   "name": "sample",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "test_functions.js",
   "scripts": {
-    "start": "node sample.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cloudant/cloudant": "^4.4.0"
+    "@ibm-cloud/cloudant": "^0.1.3"
   }
 }

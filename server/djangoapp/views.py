@@ -3,8 +3,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import CarModel, CarMake
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_reviews_by_dealer_id_from_cf
+from .models import CarModel, CarMake
+from .restapis import get_dealers_from_cf, get_reviews_by_dealer_id_from_cf, get_dealer_by_id_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -74,19 +74,41 @@ def register(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        url = '/dealership'
-        dealerships = get_dealers_from_cf(url)
-        context['dealerships'] = dealerships
-        return render(request, 'djangoapp/index.html', context)
+        response = get_dealers_from_cf()
+        if response['statusCode'] == 200:
+            context['dealerships'] = response['dealers']
+            return render(request, 'djangoapp/index.html', context)
+        else:
+            context['error'] = f"{response['statusCode']} Error, {response['message']}"
+            return render(request, 'djangoapp/error.html', context)
+        
 
 
 def get_dealer_details(request, dealer_id):
     context = {}
     if request.method == "GET":
-        url = '/dealership'
-        dealer = get_dealer_by_id_from_cf(url, dealer_id)
-        context['dealer'] = dealer
-        url = '/review'
-        reviews = get_reviews_by_dealer_id_from_cf(url, dealer_id)
-        context['reviews'] = reviews
-        return render(request, 'djangoapp/dealer_details.html', context)
+        response = get_reviews_by_dealer_id_from_cf(dealer_id)
+        if response['statusCode'] == 200:
+            context['dealer'] = response['dealer']
+            context['reviews'] = response['reviews']
+            return render(request, 'djangoapp/dealer_details.html', context)
+        else:
+            context['error'] = f"{response['statusCode']} Error, {response['message']}"
+            return render(request, 'djangoapp/error.html', context)
+
+
+def add_review(request, dealer_id):
+    context = {}
+    if not request.user.is_authenticated:
+        context['error'] = f"{403} Error, you are not allowed to post a review. Please login!"
+        return render(request, 'djangoapp/error.html', context)
+    
+    if request.method == "GET":
+        response = get_dealer_by_id_from_cf(dealer_id)
+        if response['statusCode'] == 200:
+            context['dealer'] = response['dealer']
+            context['cars'] = CarModel.objects.filter(delear_id = dealer_id).all()
+            return render(request, 'djangoapp/add_review.html', context)
+        else:
+            context['error'] = f"{response['statusCode']} Error, {response['message']}"
+            return render(request, 'djangoapp/error.html', context)

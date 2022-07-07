@@ -1,24 +1,33 @@
 {% extends 'base.html' %}
 {% block page_title %}Reviews{% endblock %}
 {% block content %}
-<div class="row p-3">
-    <div class="col">
+{% load static %}
+<div class="row p-3 border-bottom border-dark border-3">
+    <div class="col-md-6">
         <h2>{{ dealer.full_name }}</h2>
         <p>We are at {{ dealer.address }} (lat: {{ dealer.lat }}, long: {{ dealer.long }} ). Hello from {{ dealer.state }} state!</p>
     </div>
-</div>
-<div class="row">
-    {% for r in reviews %}
-    <div class="col">
-        <div class="card-group">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ r.name }} purshased {{ r.car_make }} - {{ r.car_model }} ({{ r.car_year }})</h5>
-                    <p class="card-text">{{ r.review }}</p>
-                </div>
+    <div class="col-md-6 align-self-end text-center">
+        <div class="card mx-3">
+            <div class="card-body p-2">
+                <a type="button" class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer.id %}">ADD REVIEW</a>
+                <p>Feel free to share your expirience with us!</p>
             </div>
         </div>
     </div>
+</div>
+<div class="row m-1 row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for r in reviews %}
+        <div class="col">
+            <div class="card">
+                <img class="card-img-left m-2" src="{{MEDIA_URL}}/emoji/{{ r.sentiment }}.png" style="width:30px;height:30px;">
+                <div class="card-body p-2">
+                    <h5 class="card-title">{{ r.car_make }} - {{ r.car_model }} ({{ r.car_year }})</h5>
+                    <p class="card-text">{{ r.review }}</p>
+                    <small>by {{ r.name }}</small>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}

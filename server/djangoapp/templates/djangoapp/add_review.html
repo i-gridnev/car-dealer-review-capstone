@@ -1,16 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
-
-</head>
-    <body>
-    <!--Add review form here -->
-    </body>
-</html>
+{% extends 'base.html' %}
+{% block page_title %}Add review{% endblock %}
+{% block custom_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="row p-3 justify-content-center">
+    <div class="col-8">
+        <h1>Add a review about "{{ dealer.full_name }}"</h1>
+        <form class="row" action="">
+            <div class="row mb-3">
+                <label class="col-form-label" for="review">Your review:</label>
+                <div class="col">
+                    <textarea class="form-control" id="review" name="review" rows="2" required></textarea>
+                </div>  
+            </div>
+            <div class="row mb-3">
+                <div class="col">  
+                    <div class="form-check">                
+                        <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+                        <label for="purchasecheck">Has purchased the car from "{{ dealer.full_name }}"?</label>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse" id="purchase_details">
+            <div class="row mb-3">
+                <label class="col-form-label" for="car">Select your car:</label>
+                <div class="col-md-6">
+                <select name="car" id="car" class="form-select" required>
+                    {% for car in cars %}
+                        <option selected value={{car.id}}>{{ car.name }} {{ car.make.name }} {{ car.Year | date:'Y'}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="row mb-3">            
+                <label class="col-form-label" for="purshaseDate">Select your purshase date</label>
+                <div class="col-md-6">
+                <input id="purshaseDate" class="form-control" type="date" />
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script>  
+    $(function () {  
+        $('#purchasecheck').change(function () {  
+            $('#purchase_details').toggle()  
+        })  
+    });  
+</script> 
+{% endblock %}
