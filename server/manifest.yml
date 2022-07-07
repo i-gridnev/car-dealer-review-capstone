@@ -7,6 +7,8 @@
     env:
       DEBUG_MODE: ((DEBUG_MODE))
       APP_ROUTE: ((ROUTE))
+      SECRET_KEY: ((SECRET_KEY))
+      API_CLOUDANT_DB: ((API_CLOUDANT_DB))
   - name: djangoapp-nginx
     routes:
       - route: ((ROUTE))/static
