@@ -20,7 +20,7 @@
     {% for r in reviews %}
         <div class="col">
             <div class="card">
-                <img class="card-img-left m-2" src="{{MEDIA_URL}}/emoji/{{ r.sentiment }}.png" style="width:30px;height:30px;">
+                <img class="card-img-left m-2" src="/static{{MEDIA_URL}}emoji/{{ r.sentiment }}.png" style="width:30px;height:30px;">
                 <div class="card-body p-2">
                     <h5 class="card-title">
                         {% if r.purchase %}
