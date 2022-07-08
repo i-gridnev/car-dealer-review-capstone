@@ -22,9 +22,16 @@
             <div class="card">
                 <img class="card-img-left m-2" src="{{MEDIA_URL}}/emoji/{{ r.sentiment }}.png" style="width:30px;height:30px;">
                 <div class="card-body p-2">
-                    <h5 class="card-title">{{ r.car_make }} - {{ r.car_model }} ({{ r.car_year }})</h5>
+                    <h5 class="card-title">
+                        {% if r.purchase %}
+                            {{ r.car_make }} - {{ r.car_model }} ({{ r.car_year }})
+                        {% else %}
+                            Not purchased
+                        {% endif %}
+                    </h5>
                     <p class="card-text">{{ r.review }}</p>
-                    <small>by {{ r.name }}</small>
+                    <p class="card-text"><small>posted {{ r.posted_at }}</small><br>
+                    <small>by {{ r.name }} {% if r.purchase %} purchased {{ r.purchase_date }}{% endif %}</small></p>
                 </div>
             </div>
         </div>

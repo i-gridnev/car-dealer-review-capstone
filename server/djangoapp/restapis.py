@@ -15,11 +15,6 @@ def send_request(url, method='GET', json_data='', **kwargs):
             json=json_data,
             params=kwargs)
         json_data = json.loads(response.text)
-        if method == 'POST' and not response['ok']:
-            return {
-                'statusCode': 500,
-                'message': 'review was not send, try again later'
-            }
         return json_data
     except:
         print("Network exception occurred")
@@ -50,9 +45,9 @@ def get_reviews_by_dealer_id_from_cf(dealerId):
     response = send_request(url, dealerId=dealerId)
     if response['statusCode'] == 200:
         response['dealer'] = CarDealer(**response['dealer'])
-        response['reviews'] = map(
+        response['reviews'] = list(map(
             lambda raw: DealerReview(**raw), response['reviews']
-        )
+        ))
     return response
 
 
@@ -69,7 +64,6 @@ def analyze_review_sentiments(text):
         text=text,
         features=Features(sentiment=SentimentOptions()),
         language='en').get_result()
-    # print(json.dumps(response, indent=2))
     return response['sentiment']['document']['label']
 
 

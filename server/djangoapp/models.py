@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.utils.timezone import now
 
@@ -25,7 +26,7 @@ class CarModel(models.Model):
     Year = models.DateField()
 
     def __str__(self) -> str:
-        return f'{self.make} {self.name} dealerId={self.delear_id}'
+        return f'{self.make} {self.name} {self.Year.year}'
 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
@@ -46,9 +47,13 @@ class CarDealer:
         return f'Dealer {self.short_name} -- {self.st}'
 
 class DealerReview:
-    def __init__(self, _id, name, dealership, review, purchase, sentiment, purchase_date='', car_make='', car_model='', car_year=''):
+    def __init__(self, _id, name, dealership, review, purchase, sentiment, posted_at=None, purchase_date=None, car_make=None, car_model=None, car_year=None):
         self.id = _id
         self.name = name
+        if posted_at:
+            self.posted_at = datetime.fromtimestamp(int(posted_at))
+        else:
+            self.posted_at = datetime(1900, 1, 1)
         self.dealership = dealership
         self.review = review
         self.purchase = purchase

@@ -28,7 +28,7 @@ def test_post_review(request, new_review):
 if __name__ == '__main__':
     request = make_creds()
 
-    print(test_get_reviews_by_dealerid(request, 15))
+    # print(test_get_reviews_by_dealerid(request, 15))
 
     new_review = {
         "id": 1114,
@@ -36,9 +36,10 @@ if __name__ == '__main__':
         "dealership": 15,
         "review": "Oh, Great service!",
         "purchase": True,
-        "another": "field",
+        "sentiment": "positive",
         "purchase_date": "02/16/2021",
         "car_make": "Audi",
         "car_model": "Car",
+        "car_year": 1990,
     }
-    # print(test_post_review(request, new_review))
+    print(test_post_review(request, new_review))

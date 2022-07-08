@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from .models import CarModel
 from .restapis import get_dealers_from_cf, get_reviews_by_dealer_id_from_cf, get_dealer_by_id_from_cf, post_review, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
 from datetime import datetime
 import logging
 
@@ -62,10 +61,9 @@ def register(request):
             login(request, user)
             return redirect('djangoapp:index')
         context['error'] = f'User with name "{username}" is already registered, please try another name'
-        return render(request, 'djangoapp/registration.html', context)
-    else:
-        context['error'] = f"Error, bad request"
-        return render(request, 'djangoapp/error.html', context)
+
+    return render(request, 'djangoapp/registration.html', context)
+
 
 
 def get_dealerships(request):
@@ -86,7 +84,10 @@ def get_dealer_details(request, dealer_id):
         response = get_reviews_by_dealer_id_from_cf(dealer_id)
         if response['statusCode'] == 200:
             context['dealer'] = response['dealer']
-            context['reviews'] = response['reviews']
+            context['reviews'] = sorted(
+                response['reviews'], 
+                key=lambda x: x.posted_at,
+                reverse=True)
             return render(request, 'djangoapp/dealer_details.html', context)
         else:
             context['error'] = f"{response['statusCode']} Error, {response['message']}"
@@ -111,26 +112,37 @@ def add_review(request, dealer_id):
             return render(request, 'djangoapp/error.html', context)
 
     if request.method == "POST":
-        text = request.POST['review']
-        has_purchased = bool(request.POST['purchasecheck'])
-        purchase_date = request.POST['purshase_date']
-        car_id = request.POST['car']
+        try:
+            text = request.POST['review']
+            has_purchased = request.POST['purchasecheck'] == 'purchased'
+        except KeyError:
+            context['error'] = f"{400} Error, review data is invalid"
+            return render(request, 'djangoapp/error.html', context)
+        if has_purchased:
+            try:
+                purchase_date = request.POST['purshase_date']
+                if not purchase_date:
+                    raise KeyError
+                car_id = int(request.POST['car'])
+            except KeyError:
+                context['error'] = f"{404} Error, car or purshase date is not specified"
+                return render(request, 'djangoapp/error.html', context)
 
         review = {
             'name': f'{request.user.first_name} {request.user.last_name}',
+            'posted_at': datetime.timestamp(datetime.now()),
             'dealership': dealer_id,
             'review': text,
-            'purchase_date': purchase_date,
             'sentiment': analyze_review_sentiments(text)
         }
 
         if has_purchased and car_id and purchase_date:
-            car = CarModel.objects.get(car_id)
+            car = CarModel.objects.get(id = car_id)
             review['purchase'] = has_purchased
             review['purchase_date'] = purchase_date
             review['car_model'] = car.name
             review['car_make'] = car.make.name
-            review['car_year']: car.Year
+            review['car_year'] = car.Year.year
         else:
             review['purchase'] = False
 

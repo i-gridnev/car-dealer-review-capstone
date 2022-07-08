@@ -68,7 +68,7 @@ def get_dealer(service, dealerId):
 def get_reviews(service, dealerId):
     db = 'reviews'
     fields = [
-        '_id', 'name', 'dealership', 'review',
+        '_id', 'name', 'posted_at', 'dealership', 'review',
         'purchase', 'purchase_date', 'car_make',
         'car_model', 'car_year', 'sentiment'
     ]

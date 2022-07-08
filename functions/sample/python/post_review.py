@@ -23,18 +23,26 @@ def main(dict):
         check_dealer_exist(service, dealerId)
         valid_review = {
             'name': dict['name'],
+            'posted_at': dict['posted_at'],
             'dealership': dealerId,
             'review': dict['review'],
-            'purchase': bool(dict['purchase']),
-            'purchase_date': dict['purchase_date'],
-            'car_make': dict['car_make'],
-            'car_model': dict['car_model'],
-            'car_year': dict['car_year'],
-            'sentiment': dict['sentiment']
+            'sentiment': dict['sentiment'],
+            'purchase': bool(dict['purchase'])            
         }
+        if valid_review['purchase']:
+            valid_review['purchase_date'] = dict['purchase_date']
+            valid_review['car_make'] = dict['car_make']
+            valid_review['car_model'] = dict['car_model']
+            valid_review['car_year'] = dict['car_year']
+
         document = Document(**valid_review)
         db = 'reviews'
-        return service.post_document(db=db, document=document).get_result()
+        response = service.post_document(db=db, document=document).get_result()
+        if not response.get('error'):
+            return {
+                'statusCode': 200,
+                'message': 'success'
+            }
     except (KeyError, ValueError):
         return {
             'statusCode': 400,

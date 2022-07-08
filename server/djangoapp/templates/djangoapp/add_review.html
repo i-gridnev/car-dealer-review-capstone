@@ -17,8 +17,9 @@
             </div>
             <div class="row mb-3">
                 <div class="col">  
-                    <div class="form-check">                
-                        <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+                    <div class="form-check">  
+                        <input type='hidden' value='0' name="purchasecheck" id="purchasecheckhidden">              
+                        <input class="form-check-input" value="purchased" type="checkbox" name="purchasecheck" id="purchasecheck">                        
                         <label for="purchasecheck">Has purchased the car from "{{ dealer.full_name }}"?</label>
                     </div>
                 </div>
@@ -27,7 +28,7 @@
                 <div class="row mb-3">
                     <label class="col-form-label" for="car">Select your car:</label>
                     <div class="col-md-6">
-                        <select name="car" id="car" class="form-select" required>
+                        <select name="car" id="car" class="form-select">
                             {% for car in cars %}
                                 <option selected value={{car.id}}>{{ car.name }} {{ car.make.name }} {{ car.Year | date:'Y'}}</option>
                             {% endfor %}
@@ -49,12 +50,14 @@
 </div>
 {% endblock %}
 {% block custom_js %}
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script>  
-    $(function () {  
-        $('#purchasecheck').change(function () {  
-            $('#purchase_details').toggle()  
-        })  
-    });  
+<script>
+    purshase_details = document.getElementById('purchase_details')
+    checkBox = document.getElementById('purchasecheck').addEventListener('click', event => {
+        if(event.target.checked) {
+            purshase_details.style.display = 'block';
+        } else {
+            purshase_details.style.display = 'none'
+        }
+    });
 </script> 
 {% endblock %}
